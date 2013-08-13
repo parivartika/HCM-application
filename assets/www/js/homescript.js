@@ -11,7 +11,7 @@ function onDeviceReady() {
 }
 
 /*function readydb(){
-    
+ 
 }*/
 
 document.addEventListener("backbutton", function(e)
@@ -292,7 +292,7 @@ function onNotificationGCM(e) {
 			window.localStorage["regID"]= e.regid;
 			
 			 $.ajax({
-           url: 'http://10.0.2.2/gcm_server_php/register.php', //This is the current doc
+           url: 'http://192.168.43.188/gcm_server_php/register.php', //This is the current doc
            type: "POST",
            data: {name: "abhi", email: "helloworld@eclipseregid11111", regId: e.regid},
            success: function(data){
