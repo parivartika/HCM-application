@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+                <meta name="apple-mobile-web-app-capable" content="yes">
+                    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+                        <title></title>
+              
+                       <script type="text/javascript" charset="utf-8" src="cordova-2.7.0.js"></script>
+      <script type="text/javascript" src="phonegap.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="css/dafualt-theme.min.css" />
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
+    
+    
+    <script src="js/mobiscroll.core.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.datetime.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.android.js" type="text/javascript"></script>
+     <script src="js/mobiscroll.android-ics.js" type="text/javascript"></script>
+     
+    <link href="css/mobiscroll.core.css" rel="stylesheet" type="text/css" />
+     <link href="css/mobiscroll.android.css" rel="stylesheet" type="text/css" />
+     <link href="css/mobiscroll.android-ics.css" rel="stylesheet" type="text/css" />
+                        
+                    <script type="text/javascript">
+                        
+                    document.addEventListener("deviceready", onDeviceReady, false);
+                    // PhoneGap is ready        
+                    function onDeviceReady() {
+                        // Empty
+                    	
+                    }
+                    
+                    document.addEventListener("backbutton", function(e)
+                   			{
+                   	 			window.location='./application.html';
+                   			}, false); 
+                    
+                    
+                        function reset_manual_punch_form(){
+                            
+                            document.getElementById('manual_punch_in_date').value='';
+                            document.getElementById('manual_punch_out_date').value='';
+                            document.getElementById('manual_punch_in_time').value='';
+                            document.getElementById('manual_punch_out_time').value='';
+                            document.getElementById('reason').value='';
+                                                       
+                        }
+                        
+                        function BackFxn()
+                        {
+                            
+                            if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+                            {
+                                var urlLogin="index.html";
+                                location=urlLogin;
+                                
+                            }
+                            else
+                            {
+                                
+                                var urlHome="home.html";
+                                location=urlHome;
+                                
+                            }
+                            
+                        }
+                        
+                        function Back()
+                        {
+                            
+                            if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+                            {
+                                var urlLogin="index.html";
+                                location=urlLogin;
+                                
+                            }
+                            else
+                            {
+                                
+                                var urlHome="application.html";
+                                location=urlHome;
+                                
+                            }
+                            
+                        }
+                        
+                        
+                        function validate_manual_punch_form()
+                        {
+                        
+                            var in_date =   $('#manual_punch_in_date').mobiscroll('getDate');
+                            var out_date =   $('#manual_punch_out_date').mobiscroll('getDate');
+                            
+                            if($('#manual_punch_in_date').val()=='')
+                            {
+                                $('#manual_punch_in_date').focus();
+                                alert("enter the In date");
+                                return false;
+                            }
+                            else if($('#manual_punch_out_date').val()=='')
+                            {
+                                $('#manual_punch_out_date').focus();
+                                alert("enter the OUT date");
+                                return false;
+                            }
+                            else if($('#reason').val()=='')
+                            {
+                                $('#reason').focus();
+                                alert("enter the reason for manual punch ");
+                                return false;
+                            }
+                            else if($('#manual_punch_in_time').val()=='')
+                            {
+                                $('#manual_punch_in_time').focus();
+                                alert("enter the In time");
+                                return false;
+                            }
+                            else if($('#manual_punch_out_time').val()=='')
+                            {
+                                $('#manual_punch_out_time').focus();
+                                alert("enter the OUT time");
+                                return false;
+                            }
+                            else if($('#manual_punch_in_date').val()==$('#manual_punch_out_date').val())
+                            {
+                                validate_time();
+                            }
+                            else if(in_date > out_date)
+                            {
+                                alert("in date can not be greater than out date");
+                            }
+                            
+                        }
+                        
+                        function validate_time()
+                        {
+                            //alert("helo");
+                            var in_time =   $('#manual_punch_in_time').mobiscroll('getDate');
+                            var out_time=  $('#manual_punch_out_time').mobiscroll('getDate');
+                            //alert(in_time);
+                            //alert(out_time);
+                            
+                            if(in_time > out_time)
+                            {
+                                alert("in time cannot be greater than out time");
+                            }
+                            else if($('#manual_punch_in_time').val()==$('#manual_punch_out_time').val())
+                            {
+                                alert("in time and out time cannot be same ");
+                            }
+                           /* if(in_time == out_time)
+                            {
+                                alert("in time cannot be same as out time");
+                            }*/
+                        }
+                        
+                        function validate_manual_punch_historyform()
+                        {
+                            var manual_punch_from_date =   $('#manual_punch_from_date').mobiscroll('getDate');
+                            var manual_punch_to_date =     $('#manual_punch_to_date').mobiscroll('getDate');
+                            
+                            if($('#manual_punch_from_date').val()=='')
+                            {
+                                $('#manual_punch_from_date').focus();
+                                alert("enter the from date");
+                                return false;
+                            }
+                            else if($('#manual_punch_to_date').val()=='')
+                            {
+                                $('#manual_punch_to_date').focus();
+                                alert("enter the to date");
+                                return false;
+                                
+                            }
+                            else if(manual_punch_from_date > manual_punch_to_date)
+                            {
+                                alert("from date can not be greater than to date");
+                                return false;
+                            }
+                        
+                        }
+                        
+                        $(function(){
+                            $('#manual_punch_in_date').mobiscroll().date({
+                                                         //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                                         theme: 'android-ics',
+                                                         display: 'bottom',
+                                                         mode: 'scroller',
+                                                         dateOrder: 'mmD ddyy'
+                                                         });
+                            
+                            $('#manual_punch_out_date').mobiscroll().date({
+                                //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                theme: 'android-ics',
+                                display: 'bottom',
+                                mode: 'scroller',
+                                dateOrder: 'mmD ddyy'
+                                });
+                            
+                            
+                            $('#manual_punch_from_date').mobiscroll().date({
+                                //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                theme: 'android-ics',
+                                display: 'bottom',
+                                mode: 'scroller',
+                                dateOrder: 'mmD ddyy'
+                                });
+                            
+                            $('#manual_punch_to_date').mobiscroll().date({
+                                //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                theme: 'android-ics',
+                                display: 'bottom',
+                                mode: 'scroller',
+                                dateOrder: 'mmD ddyy'
+                                });
+                            
+                            $('#manual_punch_in_time').mobiscroll().time({
+                                theme: 'android-ics',
+                                display: 'bottom',
+                                mode: 'scroller',
+                                scrollLock: true,
+                               
+                                 }); 
+                            
+                            $('#manual_punch_out_time').mobiscroll().time({
+                                theme: 'android-ics',
+                                display: 'bottom',
+                                mode: 'scroller',
+                                scrollLock: true,
+                               
+                                 }); 
+                            
+                            
+                        });
+                        </script>
+</head>
+<body>
+<!-- HOME MANUL PUNCH APPLICATION FORM-->
+    <div data-role="page" id="Apply" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home"  data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Manual Punch</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            
+            <form id="Manual_punch_apply" title="Manul Puch Apply form">
+                
+                
+            <label for="in_date">In Date:</label>
+            <input name="in_date" id="manual_punch_in_date" data-theme="e">
+              
+              <br>  
+            <label for="in_time">In Time</label>
+            <input name="in_time" id="manual_punch_in_time" data-theme="e">
+              <br>      
+            <label for="out_date">Out Date:</label>
+            <input name="out_date" id="manual_punch_out_date" data-theme="e">
+              <br>       
+            <label for="out_time">Out Time</label>
+            <input name="out_time" id="manual_punch_out_time" data-theme="e">
+              <br>  
+                <label for="reason">Reason:</label>
+                <textarea cols="40" rows="8" name="reason" id="reason" data-clear-btn="true" data-theme="e"></textarea>
+
+             
+                    <br>
+                <a href="#" data-role="button" data-inline="true" data-theme="b" onclick="validate_manual_punch_form();">Submit</a>
+                <button type="reset" data-inline="true" value="Reset">Reset</button>
+               <!--   <a href="#logout" data-role="button" data-inline="true" data-theme="b" onclick="reset_manual_punch_form();" >Reset</a>  -->
+        </div>
+    </div>
+    
+    <!-- CANCEL PAGE-------------- -->
+    
+    <div data-role="page" id="Cancel" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home"  data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Manual Punch</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+        </div>
+    </div>
+    
+    <!-- HISTORY PAGE -->
+    
+    <div data-role="page" id="History" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home"  data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Manual Punch</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            
+            <form id="Manual_punch_history" title="Manual punch history form">
+                <label for="from_date">From date:</label>
+                
+                <input name="from_date" id="manual_punch_from_date" data-theme="e">
+                    
+                    <br>
+                    <label for="to_date">To date:</label>
+                    
+                    <input name="to_date" id="manual_punch_to_date" data-theme="e">
+                        
+                        <a href="#" data-role="button" data-inline="true" data-theme="b" onclick="validate_manual_punch_historyform();">Submit</a>
+                        
+                        </form>
+           
+        </div>
+    </div>
+    
+    <!-- STATUS PAGE -------->
+    
+    <div data-role="page" id="Status" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Manual Punch</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+        </div>
+    </div>
+    
+</body>
+</html>

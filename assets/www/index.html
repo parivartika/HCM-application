@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!--  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+        <!--  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">-->
+        <title>Moser Baer</title>
+        
+        
+        <!--  <link rel="stylesheet" href="css/ctm-theme3.min.css" />-->
+        <link rel="stylesheet" href="css/dafualt-theme.min.css" />
+      <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
+     <!--<link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />
+
+        <link rel="stylesheet" href="css/override-theme.css" /> -->
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery.mobile-1.3.1.min.js"></script>
+        
+        
+        <script type="text/javascript" src="js/homescript.js"></script>
+        
+        <script type="text/javascript">
+            var db;
+            //var pushNotification;
+            
+            
+            
+            
+            function exitApp()
+            {
+                
+                navigator.app.exitApp();
+            }
+            
+            function validate(){
+                
+                if($('#txtUserName').val()=='')
+                {
+                    $('#txtUserName').focus();
+                    alert("please enter user id");
+                    
+                    return false;
+                }
+                else  if($('#txtPassword').val()=='')
+                {
+                    $('#txtPassword').focus();
+                    alert("please enter password");
+                    return false;
+                }
+                else
+                {
+                    //alert("hello");
+                    querydb();
+                }
+                
+            }
+            
+            //function ValidateUser()
+                document.addEventListener("deviceready", onDeviceReady, true);
+            
+            
+            function onDeviceReady() {
+            	if(localStorage.getItem("Ecode") != null){
+            		window.location='./home.html';
+            		return;
+            	} 	
+            	
+                db = window.openDatabase("moserbaer", "2.0", "moserbaer db", 200000);
+                
+                if(localStorage.getItem("firstrun1") == null){
+                db.transaction(populatedb, errorhandler, readydb);
+                //push_notification();
+                    window.localStorage.setItem("firstrun1","1");
+                }
+                 
+                else{
+                db.transaction(readydb, errorhandler);
+                //push_notification();
+                }
+              
+            }
+            
+            function readydb(){
+            
+            }
+            
+           /* function push_notification(){
+	
+   // $("#app-status-ul").append('<li>deviceready event received</li>');
+	//alert("devicerrady event received..");
+    
+	/*document.addEventListener("backbutton", function(e)
+	{
+    	//$("#app-status-ul").append('<li>backbutton event received</li>');
+		//alert("backbutton event received...");
+			
+			if( $("#home").length > 0)
+		{
+			// call this to get a new token each time. don't call it to reuse existing token.
+			pushNotification.unregister(successHandler, errorHandler);
+			e.preventDefault();
+			navigator.app.exitApp();
+		}
+		else
+		{
+			navigator.app.backHistory();
+		}
+	}, false); 
+
+	try 
+	{ 
+    	pushNotification = window.plugins.pushNotification;
+    	if (device.platform == 'android' || device.platform == 'Android') {
+			//$("#app-status-ul").append('<li>registering android</li>');
+			//alert("registering android..");
+        	pushNotification.register(successHandler, errorHandler, {"senderID":"198872155807","ecb":"onNotificationGCM"});		// required!
+		} else {
+			$("#app-status-ul").append('<li>registering iOS</li>');
+			alert("registering iOS..");
+        	pushNotification.register(tokenHandler, errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
+    	}
+    }
+	catch(err) 
+	{ 
+		txt="There was an error on this page.\n\n"; 
+		txt+="Error description: " + err.message + "\n\n"; 
+		alert(txt); 
+	} 
+}
+
+function onNotificationAPN(e) {
+    if (e.alert) {
+         $("#app-status-ul").append('<li>push-notification: ' + e.alert + '</li>');
+         navigator.notification.alert(e.alert);
+    }
+        
+    if (e.sound) {
+        var snd = new Media(e.sound);
+        snd.play();
+    }
+    
+    if (e.badge) {
+        pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
+    }
+}
+
+// handle GCM notifications for Android
+function onNotificationGCM(e) {
+    //$("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
+   // alert("EVENT -> RECEIVED :" + e.event);
+    
+    switch( e.event )
+    {
+        case 'registered':
+		if ( e.regid.length > 0 )
+		{
+			//$("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
+			//alert("REGISTERED -> REGID:"+ e.regid);
+			// Your GCM push server needs to know the regID before it can push to this device
+			// here is where you might want to send it the regID for later use.
+			
+			window.localStorage["regID"]= e.regid;
+			
+			/* $.ajax({
+           url: 'http://10.0.2.2/gcm_server_php/register.php', //This is the current doc
+           type: "POST",
+           data: {name: "abhi", email: "helloworld@eclipseregid11111", regId: e.regid},
+           success: function(data){
+           console.log(data);
+           } 
+           
+           });
+			
+			console.log("regID = " + e.regID);
+			
+			navigator.notification.alert(
+		            'Device is registered',  // message
+		            alertDismissed,         // callback
+		            'Push Notification',            // title
+		            'OK'                  // buttonName
+		        );			
+		}
+        break;
+        
+        case 'message':
+        	// if this flag is set, this notification happened while we were in the foreground.
+        	// you might want to play a sound to get the user's attention, throw up a dialog, etc.
+        	if (e.foreground)
+        	{
+				//$("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
+        		//alert("INLINE NOTITIFICATION..");
+				
+				// if the notification contains a soundname, play it.
+				var my_media = new Media("/android_asset/www/"+e.soundname);
+				my_media.play();
+			}
+			else
+			{	// otherwise we were launched because the user touched a notification in the notification tray.
+				if (e.coldstart)
+					$("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+				else
+				$("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+			}
+				
+			//$("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
+        	//alert("MESSAGE -> MSG:"+e.payload.message);
+        	navigator.notification.alert(
+        			e.payload.message,  // message
+		            alertDismissed,         // callback
+		            'Push Notification',            // title
+		            'OK'                  // buttonName
+		        );
+        	
+			//$("#app-status-ul").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+        	//alert("MESSAGE -> MSGCNT:"+e.payload.msgcnt);
+        break;
+        
+        case 'error':
+			//$("#app-status-ul").append('<li>ERROR -> MSG:' + e.msg + '</li>');
+        	alert("ERROR -> MSG:"+e.msg);
+        break;
+        
+        default:
+			//$("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+        	alert(" Unknown, an event was received and we do not know what it is");
+        break;
+    }
+}
+
+function alertDismissed() {
+    // do something
+}
+
+function tokenHandler (result) {
+   // $("#app-status-ul").append('<li>token: '+ result +'</li>');
+	alert("token:"+result);
+    // Your iOS push server needs to know the token before it can push to this device
+    // here is where you might want to send it the token for later use.
+}
+
+function successHandler (result) {
+    //$("#app-status-ul").append('<li>success:'+ result +'</li>');
+    alert('result = '+result);
+}
+
+function errorHandler (error) {
+    //$("#app-status-ul").append('<li>error:'+ error +'</li>');
+    alert('error = '+error);
+}
+            */
+            
+            function populatedb(tx){
+                tx.executeSql('DROP TABLE IF EXISTS employee');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS employee (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, empcode TEXT NOT NULL, password TEXT NOT NULL)');
+                tx.executeSql('INSERT INTO employee (empcode,password) VALUES ("5446","5446a")');
+                tx.executeSql('INSERT INTO employee (empcode,password) VALUES ("5447","5447a")');
+                
+                
+                tx.executeSql('DROP TABLE IF EXISTS Emp_mstr');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS Emp_mstr (empcode TEXT NOT NULL, application_name TEXT NOT NULL, app_icon_name TEXT NOT NULL, module_name TEXT NOT NULL, module_icon_name TEXT NOT NULL )');
+               // tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","APP1","MyRequest.png","MODULE-1","mod1.png")');
+               	tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","Attendence","attendence-icon.png","Leave","leave-icon.png")'); 
+               	tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","Attendence","attendence-icon.png","Out Door","OD-icon.png")');
+                tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","Attendence","attendence-icon.png","Manual Punch","manual-punch-icon.png")');
+                tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","Attendence","attendence-icon.png","Missing Punch","missing-punch-icon.png")');
+                
+                tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","Attendence","attendence-icon.png","Pending Request","pending-request-icon.png")');
+                
+                //tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5446","APP3","LeavePending.png","MODULE-3","mod3.png")');
+                tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5447","Attendence","attendence-icon.png","Missing Punch","missing-punch-icon.png")');
+                tx.executeSql('INSERT INTO Emp_mstr (empcode,application_name,app_icon_name,module_name,module_icon_name) VALUES ("5447","Attendence","attendence-icon.png","Pending Request","pending-request-icon.png")');
+                //alert("table created");
+                
+            }
+            
+            function errorhandler(e){
+                alert(e.message);
+            }
+            
+            //function dbready(){
+              //  alert("debug: success");
+           // }
+            
+            function querydb(){
+                // alert("success");
+                
+                db.transaction(function(tx){
+                               tx.executeSql('SELECT * FROM employee',[],querysuccessfull,errorhandler);
+                               });
+            }
+            
+            
+            function querysuccessfull(tx,results){
+                for(var i=0; i<results.rows.length; i++){
+                    var row=results.rows.item(i);
+                    
+                    var ecode= document.getElementById('txtUserName').value;
+                    var pass= document.getElementById('txtPassword').value;
+                    
+                    //$('#display').append('<br>'+ row.empcode+ ' ' + row.password+ ' ' + row.empdept);
+                    
+                    if(row.empcode==ecode){
+                        if(row.password!=pass){
+                        alert("Incorrect Password");
+                            document.getElementById('txtPassword').value='';
+                            $('#txtPassword').focus();
+                            ;
+                            return;
+                        }
+                    }
+                    
+                    if(row.password==pass){
+                        if(row.empcode!=ecode){
+                            alert("Incorrect Employee Code");
+                            document.getElementById('txtUserName').value='';
+                            $('#txtUserName').focus();
+                            return;
+                        }
+                    }
+
+                if(row.empcode==ecode && row.password==pass){
+                        //if(row.empdept=='SALES'){
+                            //alert("login succesfull..!!");
+                            window.localStorage["Ecode"]=$('#txtUserName').val();
+                            //window.localStorage["Edept"]='SALES'       //change it to emp name later on
+                            //sales_application();
+                            
+                            var urlHome="home.html";
+                            location=urlHome;
+                            return;
+                       // }
+                        
+                       /* else if(row.empdept=='IT'){
+                            alert("login successfull ..!! FOR IT DEPT");
+                            window.localStorage["Ecode"]=$('#txtUserName').val();
+                            window.localStorage["Edept"]='IT'        //change it to emp name later on
+                            //it_applications();
+                            //var urlHome="home.html";
+                            //location=urlHome;
+                            return;
+                        }*/
+                    }
+                }
+                alert("incorrect username or password..!!");
+                var urlLogin="index.html";
+                location=urlLogin;
+            }
+            
+            
+            </script>
+        
+    </head>
+    
+    <body>
+        <div data-role="page" id="login" data-theme="b">
+        <div data-theme="b" data-role="header">
+            
+            <h1>
+				HCM Application
+            </h1>
+
+        </div>
+        <p>
+        <br>
+        <br>
+        
+   
+        
+        
+        <div data-role="content">
+            <center><img src="css/images/logo3.png"></center>
+            <form  id="login" title="Login Form">
+                <div data-role="fieldcontain">
+                    <label   for="txtUserName"><b>User ID</b></label>
+                    <input type="text" id="txtUserName" tabindex="1" data-theme="e" required="required" value="" placeholder="emp code" class="small-rounded" />
+                    
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="txtPassword"><b>Password</b></label>
+                    <input  type="password" id="txtPassword" tabindex="2" data-theme="e" name="txtPassword"  required="required" placeholder="password" class="small-rounded" />
+                </div>
+                
+                <div data-role="fieldcontain" >
+                    <a href="#" data-role="button" data-theme="b" data-inline="true" onclick="validate();">LOGIN</a>
+                    <a href="#logout" data-role="button" data-theme="b" data-inline="true">EXIT</a>
+                </div>
+            </form>
+
+        </div>
+
+        <!-----------------------------------footer---------------------------------->
+        <div data-role="footer" data-position="fixed"  data-theme="b"  >
+            <h4>Powered by: Moser Baer IT Services</h4>
+            
+        </div>
+
+    </div><!-- /page -->
+    
+    
+    <div data-role="page" id="logout">
+        <div data-role="content">
+            <span class="title">Are you sure?</span>
+            <a href="#home" data-role="button" data-theme="b" onClick="exitApp()">Yes</a>
+            <a href="#" data-role="button" data-theme="c" data-rel="back" >No</a>
+        </div>
+        <style>
+            span.title { display:block; text-align:center;
+                margin-top:10px; margin-bottom:20px; }
+            </style>
+    </div>
+    </div></div>
+    
+        
+      <!--   <div data-role="page" data-theme="a" >
+            
+            <div data-role="header"  data-position="fixed"   data-theme="a" >
+                
+                
+                <h1 > MOSER BAER</h1>
+            </div><!-- /header 
+            <BR>
+            <BR>
+            <BR>	
+            <!-----------------------------content----------------------------------------- 	  
+            
+            <div data-role="content">
+            
+                
+                <form  id="login" title="Login Form">
+                    <div data-role="fieldcontain">
+                        <label   for="txtUserName"><b>User ID</b></label>
+                        <input type="text" id="txtUserName" tabindex="1" data-theme="b" required="required" value="" placeholder="emp code" class="small-rounded" />
+                        
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="txtPassword"><b>Password</b></label>
+                        <input  type="password" id="txtPassword" tabindex="2" data-theme="b" name="txtPassword"  required="required" placeholder="password" class="small-rounded" />
+                    </div>
+                    
+                    <div data-role="fieldcontain" >
+                        <a href="#" data-role="button" data-theme="b" data-inline="true" onclick="validate();">LOGIN</a>
+                        <a href="#logout" data-role="button" data-theme="b" data-inline="true">EXIT</a>
+                    </div>
+                </form>
+                
+                <div id="display"> </div>
+            </div><!-- content 
+            
+            <!-----------------------------------footer-------------------------------
+            <div data-role="footer" data-position="fixed"  data-theme="a"  >
+                <h4>
+                    <span style="font-size:9px"> Copyright 2012,MoserBaer India Lmtd.</span></h4>
+                
+            </div>
+            
+            <!-- /footer -->
+            
+            
+            
+        </div><!-- /page 
+        
+        
+        <div data-role="page" id="logout">
+            <div data-role="content">
+                <span class="title">Are you sure?</span>
+                <a href="#home" data-role="button" data-theme="b" onClick="exitApp()">Yes</a>
+                <a href="#" data-role="button" data-theme="c" data-rel="back" >No</a>
+            </div>
+            <style>
+                span.title { display:block; text-align:center;
+                    margin-top:10px; margin-bottom:20px; }
+                </style>
+        </div>
+        </div></div>
+		-->
+    </body>
+</html>

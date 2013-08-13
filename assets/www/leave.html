@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+                <meta name="apple-mobile-web-app-capable" content="yes">
+                    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+                        <title></title>
+                        <script type="text/javascript" charset="utf-8" src="cordova-2.7.0.js"></script>
+      <script type="text/javascript" src="phonegap.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="css/dafualt-theme.min.css" />
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
+    
+    
+    <script src="js/mobiscroll.core.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.datetime.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.android.js" type="text/javascript"></script>
+     <script src="js/mobiscroll.android-ics.js" type="text/javascript"></script>
+     
+    <link href="css/mobiscroll.core.css" rel="stylesheet" type="text/css" />
+     <link href="css/mobiscroll.android.css" rel="stylesheet" type="text/css" />
+     <link href="css/mobiscroll.android-ics.css" rel="stylesheet" type="text/css" />
+
+                        
+                            <script type="text/javascript">
+                            
+                            document.addEventListener("deviceready", onDeviceReady, false);
+                            // PhoneGap is ready        
+                            function onDeviceReady() {
+                                // Empty
+                            	
+                            }
+                            
+                            document.addEventListener("backbutton", function(e)
+                           			{
+                           	 			window.location='./application.html';
+                           			}, false);
+                            
+                            
+                                function BackFxn()
+                                {
+                                    
+                                    if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+                                    {
+                                        var urlLogin="index.html";
+                                        location=urlLogin;
+                                        
+                                    }
+                                    else
+                                    {
+                                        
+                                        var urlHome="home.html";
+                                        location=urlHome;
+                                        
+                                    }
+                                    
+                                }
+                                
+                                function Back()
+                                {
+                                    
+                                    if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+                                    {
+                                        var urlLogin="index.html";
+                                        location=urlLogin;
+                                        
+                                    }
+                                    else
+                                    {
+                                        
+                                        var urlHome="application.html";
+                                        location=urlHome;
+                                        
+                                    }
+                                    
+                                }
+                                
+                                function validate_leaveform(){
+                                    //alert("validation strarted");
+                                    
+                                    
+                                    var from_date =   $('#leave_apply_from_date').mobiscroll('getDate');
+                                    var to_date =     $('#leave_apply_to_date').mobiscroll('getDate');
+                                    
+                                    if($('#reason').val()=='')
+                                    {
+                                        $('#reason').focus();
+                                        alert("enter the reason");
+                                        return false;
+                                    }
+                                    else if($('#address').val()=='')
+                                    {
+                                        $('#address').focus();
+                                        alert("enter the address");
+                                        return false;
+                                    }
+                                    else if(document.getElementById('contact').validity.patternMismatch)
+                                    {
+                                        alert("Please enter valid contact number");
+                                        
+                                        
+                                    }
+                                    else if($('#contact').val()=='')
+                                    {
+                                        $('#contact').focus();
+                                        alert("enter the contact number");
+                                        return false;
+                                    }
+                                    else if($('#leave_apply_from_date').val()=='')
+                                    {
+                                        $('#leave_apply_from_date').focus();
+                                        alert("enter the from date");
+                                        return false;
+                                    }
+                                    if($('#leave_from_time').val()=='Choose')
+                                    {
+                                        alert("enter the from time");
+                                        return false;
+                                    }
+
+                                    else if($('#leave_apply_to_date').val()=='')
+                                    {
+                                        $('#leave_apply_to_date').focus();
+                                        alert("enter the to date");
+                                        return false;
+                                    }
+                                    
+                                    if($('#leave_to_time').val()=='Choose')
+                                    {
+                                        alert("enter the oto time");
+                                        return false;
+                                    }
+                                    
+                                    else if(from_date > to_date)
+                                    {
+                                        alert("from date can not be greater than to date");
+                                    }
+                                    
+                                }
+                                
+                                $(function(){
+                                    $('#leave_apply_from_date').mobiscroll().date({
+                                                                 //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                                                 theme: 'android-ics',
+                                                                 display: 'bottom',
+                                                                 mode: 'scroller',
+                                                                 dateOrder: 'mmD ddyy'
+                                                                 });
+                                    
+                                    $('#leave_apply_to_date').mobiscroll().date({
+                                        //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                        theme: 'android-ics',
+                                        display: 'bottom',
+                                        mode: 'scroller',
+                                        dateOrder: 'mmD ddyy'
+                                        });
+                                    
+                                    $('#leave_history_from_date').mobiscroll().date({
+                                        //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                        theme: 'android-ics',
+                                        display: 'bottom',
+                                        mode: 'scroller',
+                                        dateOrder: 'mmD ddyy'
+                                        });
+                                    
+                                    $('#leave_history_to_date').mobiscroll().date({
+                                        //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                        theme: 'android-ics',
+                                        display: 'bottom',
+                                        mode: 'scroller',
+                                        dateOrder: 'mmD ddyy'
+                                        });
+                                    
+                                });
+                                </script>
+                        </head>
+    <body>
+        
+        <!-- Apply contecnt-->
+        
+        <div data-role="page" id="Apply" data-theme="b">
+            <div data-theme="b" data-role="header">
+                <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+                <h1> Leave </h1>
+                <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+                <div data-role="navbar" data-iconpos="top">
+                    <ul>
+                        
+                        <li>
+                            <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                                Apply
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                                Cancel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                                History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                                Status
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+                <form id="Leaveapply" title="Leave application form">
+                    <label for="reason">Reason:</label>
+                    <textarea cols="40" rows="8" name="reason" id="reason" data-clear-btn="true" data-theme="e"></textarea>
+                    <br>
+                    <label for="address">Address:</label>
+                    <textarea cols="40" rows="8" name="address" id="address" data-clear-btn="true" data-theme="e"></textarea>
+                    
+                    <br>
+                    <label for="contact"><b>Contact:</b></label>
+                    <input  type="tel" id="contact" tabindex="2"  name="contact"  required="required" pattern="[0-9]{10}" placeholder="Enter contact number" class="small-rounded" data-clear-btn="true" data-theme="e"/>
+                   
+                    
+                    <br>
+                    
+                    <label for="from_date">From date:</label>
+                    
+                    <input name="from_date" id="leave_apply_from_date" data-theme="e">
+                        
+                        <br>
+                        
+                        <label for="from_time">From Time:</label>
+                        <select name="from_time" id="leave_from_time" data-theme="d">
+                            <option value="Choose">Choose</option>
+                            <option value="Full day">Full day</option>
+                            <option value="First half">First half</option>
+                            <option value="Second half">Second half</option>
+                        </select>
+                            
+                            <br>
+                            <label for="to_date">To date:</label>
+                            
+                            <input name="to_date" id="leave_apply_to_date" data-theme="e">
+                                
+                                <br>
+                                <label for="to_time">To Time:</label>
+                                <select name="to_time" id="leave_to_time" data-theme="d">
+                                    <option value="Choose">Choose</option>
+                                    
+                                </select>
+                                
+                                <label for="leave_type">Leave Type:</label>
+                                <select name="leave_type" id="leave_type" data-theme="d">
+                                    <option value="Choose">Choose</option>
+                                    <option value="Casual Leave">Casual Leave</option>
+                                    <option value="Sick Leave">Sick Leave</option>
+                                    <option value="Alternale Leave">Alternale Leave</option>
+                                    <option value="Leave without pay">Leave without pay</option>
+                                    <option value="Maternity Leave">Maternity Leave</option>
+                                    <option value="Paternity Leave">Paternity Leave</option>
+                                    <option value="Compensatory off">Compensatory off</option>
+                                    <option value="Project Leave">Project Leave</option>
+                                    <option value="Special Leave">Special Leave</option>
+                                    <option value="Advance Leave">Advance Leave</option>
+                                </select>
+                             
+                                    <script type="text/javascript">
+                                  
+                                        $('#leave_from_time').change( function() {
+                                                                     
+                                                                     var htmlSelect=document.getElementById('leave_to_time');
+                                                                     
+                                                                    // alert("time changed");
+                                                                     
+                                                                     if(document.getElementById("leave_from_time").value=="Full day")
+                                                                     {
+                                                                    	 $('#leave_to_time').empty();
+                                                                     
+
+                                                                        var option1 = new Option("Full day", "Full day");
+                                                                     var option2 = new Option("First half", "First half");
+                                                                        
+                                                                     htmlSelect.add(option1,null);
+                                                                     htmlSelect.add(option2,null);
+                                                                     }
+                                                                     
+                                                                     else if(document.getElementById("leave_from_time").value=="First half")
+                                                                     {
+                                                                     
+                                                                    	 $('#leave_to_time').empty();
+                                                                     var option1 = new Option("First half", "First half");
+                                                                     
+                                                                     
+                                                                     htmlSelect.add(option1,null);
+                                                                     
+                                                                     }
+                                                                     
+                                                                     else if(document.getElementById("leave_from_time").value=="Second half")
+                                                                     {
+                                                                    	 $('#leave_to_time').empty();
+                                                                     var option1 = new Option("Full day", "Full day");
+                                                                     var option2 = new Option("First half", "First half");
+                                                                     
+                                                                     htmlSelect.add(option1,null);
+                                                                     htmlSelect.add(option2,null);
+                                                                     
+                                                                     }
+                                                                    
+                                                                       });
+                                        
+                                        </script>
+                                    <br>
+                                    <a href="#" data-role="button" data-inline="true" data-theme="b" onclick="validate_leaveform();">Submit</a>
+                                
+                                <button type="reset" data-inline="true" data-theme="b" value="Reset">Reset</button>
+                                    <!-- BUTTON TO TEST JAVASCIRPT FUNCTIONS <a href="#logout" data-role="button" data-inline="true" onclick="test_cases();" >test_button</a>  -->
+                                    
+                                    </form>
+            </div>
+        </div>
+        <!-- CANCEL PAGE.........................-->
+        <div data-role="page" id="Cancel" data-theme="b">
+            <div data-theme="b" data-role="header">
+                <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+                <h1> Leave</h1>
+                <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+                <div data-role="navbar" data-iconpos="top">
+                    <ul>
+                        
+                        <li>
+                            <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                                Apply
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                                Cancel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                                History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                                Status
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+                CANCEL
+            </div>
+        </div>
+        
+        
+        <!-- HISTORY PAGE.............-->
+        
+        <div data-role="page" id="History" data-theme="b">
+            <div data-theme="b" data-role="header">
+                <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+                <h1> Leave</h1>
+                <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+                <div data-role="navbar" data-iconpos="top">
+                    <ul>
+                        
+                        <li>
+                            <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                                Apply
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                                Cancel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                                History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                                Status
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+                
+                <form id="leavehistory" title="Leave history form">
+                    <label for="from_date">From date:</label>
+                    
+                    <input name="from_date" id="leave_history_from_date" data-theme="e">
+                        
+                        
+                        <label for="to_date">To date:</label>
+                        
+                        <input name="to_date" id="leave_history_to_date" data-theme="e">
+                            
+                            <a href="#" data-role="button" data-inline="true" data-theme="b" onclick="validate_leave_history_form();">Submit</a>
+                            
+                            </form>
+                <script type="text/javascript">
+                    
+                    function validate_leave_history_form(){
+                        //alert("stared");
+                        var leave_history_from_date =   $('#leave_history_from_date').mobiscroll('getDate');
+                        var leave_history_to_date =     $('#leave_history_to_date').mobiscroll('getDate');
+                        
+                        if($('#leave_history_from_date').val()=='')
+                        {
+                            $('#leave_history_from_date').focus();
+                            alert("enter the from date");
+                            return false;
+                        }
+                        else if($('#leave_history_to_date').val()=='')
+                        {
+                            $('#leave_history_to_date').focus();
+                            alert("enter the to date");
+                            return false;
+                            
+                        }
+                        else if(leave_history_from_date > leave_history_to_date)
+                        {
+                            alert("from date can not be greater than to date");
+                            return false;
+                        }
+                    }
+                    
+                    
+                   /* $('#leave_history_from_date').change( function() {
+                                                         // alert("hello");
+                                                         //$('#calrlimit2').val($('#calrlimit1').val());
+                                                         var temp = new Date(),
+                                                         diff = parseInt(($('#leave_history_from_date').datebox('getTheDate') - temp) / ( 1000 * 60 * 60 * 24 ));
+                                                         //alert(diff);
+                                                         diffstrt = (diff * -1)-1; // If you want a minimum of 1 day between, make this -2 instead of -1
+                                                         diffend = diff + 11; // Why 11 instead of 10?  No idea...
+                                                         //alert(diffstrt);
+                                                         //alert(diffend);
+                                                         $('#leave_history_to_date').datebox({"minDays": diffstrt});
+                                                         //$('#calrlimit2').datebox({"maxDays": diffend});
+                                                         });
+                    */
+                    
+                    </script>
+                
+                
+            </div>
+        </div>
+        
+        <!-- STAUS PAGE.........-->
+        
+        <div data-role="page" id="Status" data-theme="b">
+            <div data-theme="b" data-role="header">
+                <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+                <h1> Leave</h1>
+                <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+                <div data-role="navbar" data-iconpos="top">
+                    <ul>
+                        
+                        <li>
+                            <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                                Apply
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                                Cancel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                                History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                                Status
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content">
+                Status
+            </div>
+        </div>
+        
+        
+    </body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title></title>
+<script type="text/javascript" charset="utf-8" src="cordova-2.7.0.js"></script>
+      <script type="text/javascript" src="phonegap.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="css/dafualt-theme.min.css" />
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
+
+    <style type="text/css">
+        body {
+            font-family: arial, verdana, sans-serif;
+            font-size: 12px;
+        }
+
+        .demo {
+            display: none;
+        }
+    </style>
+
+    <script src="js/mobiscroll.core.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.datetime.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.android.js" type="text/javascript"></script>
+     <script src="js/mobiscroll.android-ics.js" type="text/javascript"></script>
+     
+    <link href="css/mobiscroll.core.css" rel="stylesheet" type="text/css" />
+     <link href="css/mobiscroll.android.css" rel="stylesheet" type="text/css" />
+     <link href="css/mobiscroll.android-ics.css" rel="stylesheet" type="text/css" />
+   
+
+
+
+   
+      
+      <script type="text/javascript">
+          
+      $(function(){
+          $('#ODapply_from_date').mobiscroll().date({
+                                       //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+                                       theme: 'android-ics',
+                                       display: 'bottom',
+                                       mode: 'scroller',
+                                       dateOrder: 'mmD ddyy'
+                                       });
+          
+          $('#ODapply_to_date').mobiscroll().date({
+              //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+              theme: 'android-ics',
+              display: 'bottom',
+              mode: 'scroller',
+              dateOrder: 'mmD ddyy'
+              });
+
+          $('#ODhistory_from_date').mobiscroll().date({
+              //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+              theme: 'android-ics',
+              display: 'bottom',
+              mode: 'scroller',
+              dateOrder: 'mmD ddyy'
+              });
+          
+          $('#ODhistory_to_date').mobiscroll().date({
+              //invalid: { daysOfWeek: [0, 6], daysOfMonth: ['5/1', '12/24', '12/25'] },
+              theme: 'android-ics',
+              display: 'bottom',
+              mode: 'scroller',
+              dateOrder: 'mmD ddyy'
+              });
+          
+          $('#ODapply_from_time').mobiscroll().time({
+              theme: 'android-ics',
+              display: 'bottom',
+              mode: 'scroller',
+              scrollLock: true,
+             
+               }); 
+         
+          $('#ODapply_to_time').mobiscroll().time({
+              theme: 'android-ics',
+              display: 'bottom',
+              mode: 'scroller',
+              scrollLock: true,
+             
+               }); 
+          
+          
+          });
+      
+      document.addEventListener("deviceready", onDeviceReady, false);
+      // PhoneGap is ready        
+      function onDeviceReady() {
+          // Empty
+      	
+      }
+      
+      document.addEventListener("backbutton", function(e)
+     			{
+     	 			window.location='./application.html';
+     			}, false); 
+      
+          $( document ).bind( "mobileinit", function() {
+                             // Make your jQuery Mobile framework configuration changes here!
+                             
+                             $.mobile.allowCrossDomainPages = true;
+                             });
+          
+          function BackFxn()
+          {
+              
+              if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+              {
+                  var urlLogin="index.html";
+                  location=urlLogin;
+                  
+              }
+              else
+              {
+                  
+                  var urlHome="home.html";
+                  location=urlHome;
+                  
+              }
+              
+          }
+          
+          function Back()
+          {
+              
+              if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+              {
+                  var urlLogin="index.html";
+                  location=urlLogin;
+                  
+              }
+              else
+              {
+                  
+                  var urlHome="application.html";
+                  location=urlHome;
+                  
+              }
+              
+          }
+          
+          function  PopulateOD()
+          {
+              
+              
+              GetPendingApprovalDetails("OD");
+              //date_validate();
+              
+          }
+          
+          function reset_ODform(){
+              document.getElementById('select-origination-place').value='';
+              document.getElementById('ODapply_from_date').value='';
+              document.getElementById('ODapply_from_time').value='';
+              document.getElementById('ODapply_to_time').value='';
+              document.getElementById('ODapply_to_date').value='';
+              document.getElementById('destination').value='';
+              document.getElementById('purpose').value='';
+              
+          }
+          
+       
+          
+          function GetPendingApprovalDetails(reqtype)
+          
+          {
+              var ecode=5446;
+              
+              var request = "http://bizapp1.moserbaer.in/mobile/Mbilintra.svc/GetPendingApproval?ecode=";
+              request=request+ecode+"&reqtype="+reqtype;
+              
+              //alert(request);
+              
+              $.ajax({
+                     
+                     type: "GET", //GET or POST or PUT or DELETE verb
+                     
+                     url: request, // Location of the service
+                     
+                     contentType:  "application/javascript", // content type sent to server
+                     
+                     dataType: "jsonp", //Expected data format from server
+                     
+                     crossDomain: true,
+                     
+                     success: function (msg){
+                     //On Successfull service call
+                     
+                     PendingData(msg,reqtype);
+                     
+                     
+                     },
+                     
+                     error:ServiceFailed
+                     // When Service call fails
+                     
+                     });
+          }
+          
+          
+          function ServiceFailed(result)
+          {
+              alert("service failed");
+              alert('Service call failed: ' + result.status + '   ' + result.statusText);
+          }
+          
+          function PendingData(result,reqtype)
+          {
+           
+              $.each(result, function(key){
+                     alert(" approval request received.."+result[key].Ename);
+                     
+                     /*html+='<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-corner-bottom ui-li-last ui-btn-up-c"> <div class="ui-btn-inner ui-li"><div class="ui-btn-text"> <a href="#" class="ui-link-inherit">'+ result[key].Ename+'</a></div></div></li>'*/
+                     $('#ODreqIDList').append('<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-corner-bottom ui-li-last ui-btn-up-c"> <div class="ui-btn-inner ui-li"><div class="ui-btn-text"> <a href="#" class="ui-link-inherit">' + result[key].Ename+'</a></div></div></li>');
+                     
+                     //$('#ODreqIDList').append(html);
+                     });
+          }
+          
+          //the reset function has alredy been given in the the abouve listed jquery
+          /*function reset(){
+              document.getElementById('select-origination-place').value='choose';
+              document.getElementById('from_date').value='';
+              document.getElementById('from_date').value='';
+              document.getElementById('from_date').value='';
+              document.getElementById('from_date').value='';
+              document.getElementById('from_date').value='';
+          }*/
+          
+          function validate_ODform(){
+              //alert("validation strarted");
+              
+              
+              var from_date =   $('#ODapply_from_date').mobiscroll('getDate');
+              var to_date =   $('#ODapply_to_date').mobiscroll('getDate');
+             
+              
+              if($('#select-origination-place').val()=='Choose')
+              {
+                  alert("enter the orgination place");
+                  return false;
+              }
+              else if($('#ODapply_from_date').val()=='')
+              {
+                  $('#ODapply_from_date').focus();
+                  alert("enter the from date");
+                  return false;
+              }
+              else if($('#ODapply_to_date').val()=='')
+              {
+                  $('#ODapply_to_date').focus();
+                  alert("enter the to date");
+                  return false;
+              }
+              else if($('#destination').val()=='')
+              {
+                  $('#destination').focus();
+                  alert("enter the destination place");
+                  return false;
+              }
+              else if($('#purpose').val()=='')
+              {
+                  $('#purpose').focus();
+                  alert("enter the purpose of visit");
+                  return false;
+              }
+              else if($('#ODapply_from_time').val()=='')
+              {
+                  $('#ODapply_from_time').focus();
+                  alert("enter the purpose of visit");
+                  return false;
+              }
+              else if($('#ODapply_to_time').val()=='')
+              {
+                  $('#ODapply_to_time').focus();
+                  alert("enter the purpose of visit");
+                  return false;
+              }
+              
+              else if($('#ODapply_from_date').val()==$('#ODapply_to_date').val())
+              {
+                  validate_time();
+              }
+              
+              else if(from_date > to_date)
+              {
+                  alert("from date can not be greater than to date");
+              }
+             
+          }
+          
+          function validate_time()
+          {
+            //var from_date =   $('#ODapply_from_date').datebox('getTheDate');
+              //var to_date =   $('#ODapply_to_date').datebox('getTheDate');
+              
+              var from_time =   $('#ODapply_from_time').mobiscroll('getDate');
+              var to_time=  $('#ODapply_to_time').mobiscroll('getDate');
+              
+             // alert(from_date);
+              //alert(to_date);
+              
+             // alert(from_time);
+             // alert(to_time);
+              
+              if(from_time > to_time)
+              {
+                  alert("from time cannot be greater than to time");
+              }
+              else if($('#ODapply_from_time').val()==$('#ODapply_to_time').val())
+              {
+                  alert("from time and to time cannot be same ");
+              }
+              
+              
+              
+              
+          
+          }
+          
+          function validate_ODhistoryform()
+          {
+              
+              var ODhistory_from_date =   $('#ODhistory_from_date').mobiscroll('getDate');
+              var ODhistory_to_date =     $('#ODhistory_to_date').mobiscroll('getDate');
+              
+              if($('#ODhistory_from_date').val()=='')
+              {
+                  $('#ODhistory_from_date').focus();
+                  alert("enter the from date");
+                  return false;
+              }
+              else if($('#ODhistory_to_date').val()=='')
+              {
+                  $('#ODhistory_to_date').focus();
+                  alert("enter the to date");
+                  return false;
+              
+              }
+              else if(ODhistory_from_date > ODhistory_to_date)
+              {
+                  alert("from date can not be greater than to date");
+                  return false;
+              }
+             /* else if($('#ODhistory_from_date').val()==$('#ODhistory_to_date').val())
+              {
+                  
+              }*/
+              
+              
+
+          
+          }
+          
+          function validatetest()
+          {
+              alert("validate");
+              if($('#history_from_date').val()=='')
+              {
+                  $('#history_from_date').focus();
+                  alert("enter the from date");
+                  return false;
+              }
+          }
+          
+          function reset(){
+              document.getElementById('select-origination-place').value='Choose';
+              document.getElementById('ODapply_from_date').value='';
+              document.getElementById('OODapply_from_time').value='';
+              document.getElementById('ODapply_to_time').value='';
+              document.getElementById('ODapply_to_date').value='';
+              document.getElementById('destination').value='';
+              document.getElementById('purpose').value='';
+              
+          }
+        
+          
+         
+
+          </script>
+</head>
+<body>   
+    <!-- Apply contecnt-->
+    
+    <div data-role="page" id="Apply" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Out Door Duty</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+                <form id="ODapply" title="OD application form">
+                <label for="select-origination-place">Origination Place:</label>
+                <select name="select-origination-place" id="select-origination-place" data-theme="d">
+                    <option value="Choose">Choose</option>
+                    <option value="Office">Office</option>
+                    <option value="Residence">Residence</option>
+                </select>
+                 
+                
+                 <br>   
+            <label for="from_date">From date:</label>
+            
+            <input name="from_date" id="ODapply_from_date"   data-theme="e">
+                
+                <br>
+                
+                <label for="from_time">Time</label>
+                
+                <input name="from_time" id="ODapply_from_time"  data-theme="e">
+                
+                <br>
+            <label for="to_date">To date:</label>
+                
+            <input name="to_date" id="ODapply_to_date" data-theme="e">
+
+				<br>
+                <label for="to_time">Time</label>
+                
+                <input name="to_time" id="ODapply_to_time" data-theme="e">
+                
+                <br>
+                <label for="destination"><b>Place to visit:</b></label>
+                <input  type="text" id="destination" tabindex="2"  name="destination"  required="required" placeholder="Enter place to visit" class="small-rounded" data-clear-btn="true" data-theme="e"/>
+                
+                <br>
+                <label for="purpose">Purpose of visit:</label>
+                <textarea cols="40" rows="8" name="purpose" id="purpose" data-clear-btn="true" data-theme="e"></textarea>
+                                <!-- date limit test 2-->
+                				
+				
+               <!-- TEST CODE FOR THE DATE VALIDATION
+                
+                
+                <label for="calrlimit1">Beginning Date</label>
+                <input name="calrlimit1" type="date" data-role="datebox" id="calrlimit1"
+                data-options='{"mode": "calbox", "afterToday": false, "maxDays": 10}' />
+                
+                <label for="calrlimit2">Ending Date</label>
+                <input name="calrlimit2" type="date" data-role="datebox" id="calrlimit2"
+                data-options='{"minDays": -10, "mode": "calbox"}' />
+                -->
+                        
+                           
+
+                        
+                        
+                <script type="text/javascript">
+                
+                
+                
+                
+           
+                
+                    
+                    /*$('#ODapply_from_date').change( function() {
+                                           // alert("hello");
+                                            //$('#calrlimit2').val($('#calrlimit1').val());
+                                            var temp = new Date(),
+                                            diff = parseInt(($('#ODapply_from_date').datebox('getTheDate') - temp) / ( 1000 * 60 * 60 * 24 ));
+                                            //alert(diff);
+                                            diffstrt = (diff * -1)-1; // If you want a minimum of 1 day between, make this -2 instead of -1
+                                            diffend = diff + 11; // Why 11 instead of 10?  No idea...
+                                            //alert(diffstrt);
+                                            //alert(diffend);
+                                            $('#ODapply_to_date').datebox({"minDays": diffstrt});
+                                            //$('#calrlimit2').datebox({"maxDays": diffend});
+                                            });
+
+                                       
+                   /*
+					$('#calrlimit1').change( function() {
+                                            alert("hello");
+                                            //$('#calrlimit2').val($('#calrlimit1').val());
+                                            var temp = new Date(),
+                                            diff = parseInt(($('#calrlimit1').datebox('getTheDate') - temp) / ( 1000 * 60 * 60 * 24 ));
+                                            //alert(diff);
+                                            diffstrt = (diff * -1); // If you want a minimum of 1 day between, make this -2 instead of -1
+                                            diffend = diff + 11; // Why 11 instead of 10?  No idea...
+                                            //alert(diffstrt);
+                                            //alert(diffend);
+                                            $('#calrlimit2').datebox({"minDays": diffstrt});
+                                            //$('#calrlimit2').datebox({"maxDays": diffend});
+                                            });
+                    */
+                    
+                    $("#ODapply").on("pageload", function(event) {
+                                          // Default picker value of Jan 1, 2012
+                                       alert("page loaded");
+                                          });
+                    
+                    function test_cases()
+                    {
+                        alert("hello");
+                        var test_date =   $('#ODapply_from_date').datebox('getTheDate');
+                        var test_date2 =   $('#ODapply_to_date').datebox('getTheDate');
+                        alert(test_date);
+                        alert(test_date2);
+                        
+                        if(test_date > test_date2)
+                        {
+                            alert("from that can not be greater than to date");
+                        }
+
+                        
+                       /* var test_date =   $('#time_test1').datebox('getTheDate');
+                        var test_date2=  $('#time_test2').datebox('getTheDate');
+                        alert(test_date);
+                        alert(test_date2);
+                        if(test_date > test_date2)
+                        {
+                            alert("from time cannot be moer than to time");
+                        }*/
+                        //alert("function ends");
+                        
+                    }
+                    
+                    </script>
+                <br>
+                <a href="#" data-role="button" data-inline="true" data-theme="b" onclick="validate_ODform();">Submit</a>
+                <button type="reset" data-inline="true" value="Reset">Reset</button>
+                <!--  <a href="#logout" data-role="button" data-inline="true" data-theme="b" onclick="reset_ODform();" >Reset</a>-->
+                        <!-- BUTTON TO TEST JAVASCIRPT FUNCTIONS <a href="#logout" data-role="button" data-inline="true" onclick="test_cases();" >test_button</a>  -->
+               
+                </form>
+        </div>
+    </div>
+    <!-- CANCEL PAGE.........................-->
+    <div data-role="page" id="Cancel" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Out Door Duty</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            CANCEL
+        </div>
+    </div>
+    
+    
+    <!-- HISTORY PAGE.............-->
+    
+    <div data-role="page" id="History" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Out Door Duty</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            
+            <form id="ODhistory" title="OD history form">
+            <label for="from_date">From date:</label>
+            
+            <input name="from_date" id="ODhistory_from_date" data-theme="e">
+                
+                
+                <label for="to_date">To date:</label>
+                
+                <input name="to_date" id="ODhistory_to_date" data-theme="e">
+                    
+                    <a href="#" data-role="button" data-inline="true" data-theme="b" onclick="validate_ODhistoryform();">Submit</a>
+                    
+                   </form> 
+                    <script type="text/javascript">
+                        
+                        $('#ODhistory_from_date').change( function() {
+                                                       // alert("hello");
+                                                       //$('#calrlimit2').val($('#calrlimit1').val());
+                                                       var temp = new Date(),
+                                                       diff = parseInt(($('#ODhistory_from_date').datebox('getTheDate') - temp) / ( 1000 * 60 * 60 * 24 ));
+                                                       //alert(diff);
+                                                       diffstrt = (diff * -1)-1; // If you want a minimum of 1 day between, make this -2 instead of -1
+                                                       diffend = diff + 11; // Why 11 instead of 10?  No idea...
+                                                       //alert(diffstrt);
+                                                       //alert(diffend);
+                                                       $('#ODhistory_to_date').datebox({"minDays": diffstrt});
+                                                       //$('#calrlimit2').datebox({"maxDays": diffend});
+                                                       });
+                        
+                        
+                    </script>
+                    
+                
+        </div>
+    </div>
+    
+    <!-- STAUS PAGE.........-->
+    
+    <div data-role="page" id="Status" data-theme="b">
+        <div data-theme="b" data-role="header">
+            <a href="#"  data-icon="home" data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+            <h1> Out Door Duty</h1>
+            <a href="#"  data-icon="back"  data-mini="true" class="ui-btn-right" data-theme="c" onClick="Back();">Back</a>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    
+                    <li>
+                        <a href="#Apply" data-transition="fade" data-theme="a" data-icon="bars">
+                            Apply
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Cancel" data-transition="fade" data-theme="a" data-icon="delete">
+                            Cancel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#History" data-transition="fade" data-theme="a" data-icon="back">
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Status" data-transition="fade" data-theme="a" data-icon="info">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            Status
+        </div>
+    </div>
+    
+
+</body>
+</html>

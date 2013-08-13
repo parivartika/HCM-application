@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <title>Birthday App</title>
+  <!--  <link rel="stylesheet" href="css/ctm-theme3.min.css" />-->
+      <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
+     <!--<link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />-->
+
+ <!--  <link rel="stylesheet" href="css/override-theme.css" />-->
+ <link rel="stylesheet" href="css/dafualt-theme.min.css" />
+<script type="text/javascript" src="phonegap.js"></script>  
+<script src="js/jquery.js"></script>
+<script src="js/jquery.mobile-1.3.1.min.js"></script>
+ 
+  <script type="text/javascript" src="js/PushNotification.js"></script>
+  <script type="text/javascript" src="js/homescript.js"></script>
+  
+     <script type="text/javascript">
+         /*function  LoginPopup()
+         {
+             window.localStorage.removeItem("Ecode");
+             window.localStorage.removeItem("Application");
+             var urlLogin="index.html";
+             location=urlLogin;
+             
+         }*/
+         
+         function BackFxn()
+         {
+             
+             if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+             {
+                 var urlLogin="index.html";
+                 location=urlLogin;
+                 
+             }
+             else
+             {
+                 
+                 var urlHome="home.html";
+                 location=urlHome;
+                 
+             }
+             
+         }
+         
+    </script>
+  </head>
+  <body onload="check_user()" id="page_body">
+  
+  <style>
+/* center icons */
+.ui-grid-a { text-align: center;   }
+/* set row height */
+.ui-block-a, .ui-block-b { height: 100%; position:relative;width: 50%;  }
+/* set label size and color */
+.icon-label {position:absolute;   color:#FFF;  font-size:12px }
+/* bottom align icons to adjust for uneven icon heights */
+.icon-springboard {position:relative; bottom: 0; width: 100%; }
+
+a:link, a:visited, a:hover, a:active { text-decoration:none;}
+</style>
+  
+  	<div id="page1" data-role="page"   data-theme="b" >
+
+			<div data-role="header"  data-position="fixed"   data-theme="b" >
+		
+                <a href="#"  data-icon="home"  data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+                <h1> MOSERBAER</h1>
+                
+                <a href="#"  data-icon="back"  class="ui-btn-right" data-theme="c" onClick="LoginPopup();">Logout</a>
+                
+  			</div> <!-- Header -->
+  		
+  		<div data-role="content"  style="font-size:12px;padding-top: 24px!important; " data-fullscreen="true" id="gridapplist">
+  		
+  			<div id="home"> </div>
+  		
+  			<!-----------------------------------footer---------------------------------->
+        <div data-role="footer" data-position="fixed"  data-theme="b"  >
+            <h4>Powered by: Moser Baer IT Services</h4>
+            
+        </div>
+
+    </div>
+  		
+  		</div>		
+  </body>
+  </html>

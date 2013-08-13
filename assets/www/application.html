@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Birthday App</title>
+        <!--  <link rel="stylesheet" href="css/ctm-theme3.min.css" />-->
+        <link rel="stylesheet" href="css/dafualt-theme.min.css" />
+      <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
+     <!--<link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />-->
+
+        <link rel="stylesheet" href="css/override-theme.css" />
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery.mobile-1.3.1.min.js"></script>
+        
+        
+        <script type="text/javascript">
+            var db;
+            
+            document.addEventListener("deviceready", onDeviceReady, false);
+         // PhoneGap is ready        
+         function onDeviceReady() {
+             // Empty
+         	
+         }
+         
+         document.addEventListener("backbutton", function(e)
+        			{
+        	 			window.location='./home.html';
+        			}, false); 
+            
+            function  LoginPopup()
+            {
+                
+            	window.localStorage["installation"]= 'COMPLETE';
+            	var gcm_regid= window.localStorage["regID"];
+            	
+            	$.ajax({
+                    url: 'http://192.168.43.188/gcm_server_php/delete_regid.php', //This is the current doc
+                    type: "POST",
+                    data: {regId: gcm_regid},
+                    success: function(data){
+                       alert("device unregistered..!!");
+                    console.log(data);
+                    }
+                    
+                    });
+            	
+            	window.localStorage.removeItem("Ecode");
+                window.localStorage.removeItem("Application");
+                window.localStorage.removeItem("module");
+                //alert("device unregistered..!!");
+        		var urlLogin="index.html";
+        	    location=urlLogin;
+                
+            }
+            
+            function BackFxn()
+            {
+                
+                if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+                {
+                    var urlLogin="index.html";
+                    location=urlLogin;
+                    
+                }
+                else
+                {
+                    
+                    var urlHome="home.html";
+                    location=urlHome;
+                    
+                }
+                
+            }
+
+            
+            function check_session(){
+                
+                if((window.localStorage["Ecode"]=="" ||  window.localStorage["Ecode"]==undefined))
+                {
+                    var urlLogin="index.html";
+                    location=urlLogin;
+                    
+                }
+                else{
+                	
+                emp_application_function();
+                
+                }
+            }
+            
+            function emp_application_function(){
+                
+                db = window.openDatabase("moserbaer", "2.0", "moserbaer db", 200000);
+                
+                db.transaction(queryemp_mstr, errorhandler);
+                
+            }
+            function errorhandler(e){
+                alert(e.message);
+            }
+
+            function queryemp_mstr(){
+            var testapp=window.localStorage["Application"];
+                //alert(testapp);
+               // var testapp=window.localStorage["Application"];
+                	$('#App_name').append(testapp);
+                
+                var empapp_code= window.localStorage["Ecode"];
+                
+                db.transaction(function(tx){
+                               tx.executeSql('SELECT module_name,module_icon_name FROM Emp_mstr where empcode=? and application_name=?',[empapp_code,testapp],callempapp_mstr,errorhandler);
+                               });
+                //alert("result set got");
+                
+            }
+            
+            function callempapp_mstr(tx,results){
+                for(var i=0; i<results.rows.length; i++){
+                    var row=results.rows.item(i);
+                    
+                    var module='<a href="#" onClick="Moduleapp(\''+row.module_name + '\');">'+
+                    '<img src="css/images/'+row.module_icon_name + '" alt="Now Playing">'+
+                    '<span class="icon-label"  id="leaveCount"></span>'+
+                    '</a><p> <a href="#" onClick="Moduleapp(\''+row.module_name + '\');" style="color: #111; text-decoration:none;"><font size="3"><strong>'+row.module_name +'</strong></font></a></p>';
+                    
+                    $('#gridmodulelist').append('<div class="ui-grid-a"><div class="ui-block-a" id="moda" ><div class="icon-springboard" ></div></div><div class="ui-block-b" id="modb"><div class="icon-springboard" ></div></div></div>');
+                    
+                    if(i % 2 == 0){
+                        $('#moda').append('<br><p><p>'+module +'</br></p></p>');
+                    }
+                    else{
+                        $('#modb').append('<br><p><p>'+module +'</br></p></p>');
+                    }
+                }
+            }
+            
+            function Moduleapp(module_name)
+            {
+            	window.localStorage["module"]=module_name;
+            	
+            	if(window.localStorage["module"]=='Out Door')
+            		{
+            		var ODapplication="ODblacktheme.html";
+            	    location=ODapplication;
+            		}
+            	if(window.localStorage["module"]=='Manual Punch')
+        		{
+        		var manualapplication="manualpunch.html";
+        	    location=manualapplication;
+        		}
+            	
+            	if(window.localStorage["module"]=='Missing Punch')
+        		{
+        		var manualapplication="missingpunch.html";
+        	    location=manualapplication;
+        		}
+            	if(window.localStorage["module"]=='Pending Request')
+        		{
+        		var manualapplication="pendingrequest.html";
+        	    location=manualapplication;
+        		}
+            	if(window.localStorage["module"]=='Leave')
+        		{
+        		var manualapplication="leave.html";
+        	    location=manualapplication;
+        		}
+            }
+            
+            </script>
+        
+    </head>
+    <body onload="check_session()">
+        
+        <style>
+            /* center icons */
+            .ui-grid-a { text-align: center;   }
+            /* set row height */
+            .ui-block-a, .ui-block-b { height: 100%; position:relative;width: 50%;  }
+            /* set label size and color */
+            .icon-label {position:absolute;   color:#FFF;  font-size:12px }
+            /* bottom align icons to adjust for uneven icon heights */
+            .icon-springboard {position:relative; bottom: 0; width: 100%; }
+            
+            a:link, a:visited, a:hover, a:active { text-decoration:none;}
+            </style>
+        <style type="text/css">
+            
+            body {
+                font-family: arial, verdana, sans-serif;
+                font-size: 11px;
+            }
+            
+            /*
+             p{ text-align: left;display:block;padding-left:5px;position:relative;font-size:12px}*/
+            
+            .fixedFooter {
+                position: fixed !important;
+                left: 0px !important;
+                right: 0px !important;
+                bottom: 0px !important;
+                z-index: 999 !important;
+            }
+            
+            
+            .fixedHeader {
+                position: fixed !important;
+                left: 0px !important;
+                right: 0px !important;
+                top: 0px !important;
+                z-index: 20!important;
+            }
+            
+            </style>
+        
+        <div id="page2" data-role="page"   data-theme="b" >
+            
+			<div data-role="header"  data-position="fixed"   data-theme="b"  >
+                
+                <a href="#"  data-icon="home"  data-mini="true" class="ui-btn-left" data-theme="c" onClick="BackFxn();">Home</a>
+                <h1 id="App_name"> </h1>
+                
+                <a href="#"  data-icon="back"  class="ui-btn-right" data-theme="c" onClick="LoginPopup();">logout</a>
+  			</div> <!-- Header -->
+            
+            <div data-role="content"  style="font-size:12px;padding-top: 24px!important; " data-fullscreen="true" id="gridmodulelist">
+                
+                
+                
+            </div>		
+            </body>
+</html>
